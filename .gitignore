@@ -1,0 +1,9 @@
+# vscode
+.vscode/
+
+# build system outputs
+.zig-cache/
+zig-out/
+
+# memory error detector results
+valgrind-out.*
