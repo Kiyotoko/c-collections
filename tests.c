@@ -3,6 +3,7 @@
 #include "src/assertations.h"
 #include "src/array_list.h"
 #include "src/linked_list.h"
+#include "src/list.h"
 #include "src/binary_tree.h"
 #include "src/tree_set.h"
 
@@ -70,6 +71,14 @@ void linked_list_test() {
     linked_list_destroy(created);
 }
 
+void list_test() {
+    List* list = list_create(sizeof(int));
+    for (int i = 0; i < 3; i++) {
+        list_add(list, &i);
+        assert_equals(i, *(int*)list_last(list));
+    }
+}
+
 void tree_set_test() {
     TreeSet* set = tree_set_create(sizeof(int), &compere);
     assert_equals(0, tree_set_size(set));
@@ -89,6 +98,7 @@ int main() {
     array_list_test();
     binary_tree_test();
     linked_list_test();
+    list_test();
     tree_set_test();
 
     return 0;

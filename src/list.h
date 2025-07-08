@@ -1,5 +1,5 @@
-#ifndef BIbilinked_list_H
-#define BIbilinked_list_H
+#ifndef BIlist_H
+#define BIlist_H
 
 #include <stdbool.h>
 #include <stddef.h>
@@ -8,40 +8,33 @@
 /**
  * Two sided directional linked node.
  */
-typedef struct bilinked_node {
+typedef struct BilinkedNode {
     void* value;
-    struct bilinked_node* prev;
-    struct bilinked_node* next;
-} linked_node;
+    struct BilinkedNode* prev;
+    struct BilinkedNode* next;
+} BilinkedNode;
 
 /**
  * Implementation of the linked list with one directional
  * linking. Supports null values.
  */
 typedef struct {
-    linked_node* head;
-    linked_node* tail;
+    BilinkedNode* head;
+    BilinkedNode* tail;
     size_t len;
     size_t element_size;
-} bilinked_list;
-
-/**
- * Iterator for the linked list.
- */
-typedef struct {
-    linked_node* node;
-} bilinked_list_iterator;
+} List;
 
 /**
  * Creates and returns a new linked list without a head.
  */
-bilinked_list* bilinked_list_create(size_t element_size);
+List* list_create(size_t element_size);
 
 /**
  * Destroys the linked list by freeing the memory of
  * the head if present and then itself.
  */
-void bilinked_list_destroy(bilinked_list* list);
+void list_destroy(List* list);
 
 /**
  * Adds the value to the start of the linked list. This
@@ -51,7 +44,7 @@ void bilinked_list_destroy(bilinked_list* list);
  * 
  * Time complexity: O(1)
  */
-void bilinked_list_push(bilinked_list* list, void* value);
+void list_push(List* list, void* value);
 
 /**
  * Adds the value to the end of the linked list. This
@@ -61,16 +54,16 @@ void bilinked_list_push(bilinked_list* list, void* value);
  * 
  * Time complexity: O(1)
  */
-void bilinked_list_add(bilinked_list* list, void* value);
+void list_add(List* list, void* value);
 
 /**
  * Returns the first value of the list or null if this list
- * is empty.This is equal to calling the 'bilinked_list_peek'
+ * is empty.This is equal to calling the 'list_peek'
  * function.
  * 
  * Time complexity: O(1)
  */
-void* bilinked_list_first(bilinked_list* list);
+void* list_first(List* list);
 
 /**
  * Returns the last value of the list or null if this
@@ -78,14 +71,14 @@ void* bilinked_list_first(bilinked_list* list);
  * 
  * Time complexity: O(1)
  */
-void* bilinked_list_last(bilinked_list* list);
+void* list_last(List* list);
 
 /**
  * Executes the given consumer for all elements in the list.
  * 
  * Time complexity: O(n)
  */
-void bilinked_list_foreach(bilinked_list* list, consumer consumer);
+void list_foreach(List* list, Consumer consumer);
 
 /**
  * Creates a new linked list from the given list and adds all
@@ -94,7 +87,7 @@ void bilinked_list_foreach(bilinked_list* list, consumer consumer);
  * 
  * Time complexity: O(n)
  */
-bilinked_list* bilinked_list_filter(bilinked_list* list, test test);
+List* list_filter(List* list, Test test);
 
 /**
  * Returns the value at the given index of the list. If the
@@ -103,16 +96,16 @@ bilinked_list* bilinked_list_filter(bilinked_list* list, test test);
  * 
  * Time complexity: O(n)
  */
-void* bilinked_list_get(bilinked_list* list, size_t index);
+void* list_get(List* list, size_t index);
 
 /**
  * Returns the first value of the list or null if this list
- * is empty.This is equal to calling the 'bilinked_list_first'
+ * is empty.This is equal to calling the 'list_first'
  * function.
  * 
  * Time complexity: O(1)
  */
-void* bilinked_list_peek(bilinked_list* list);
+void* list_peek(List* list);
 
 /**
  * Returns and removes the first element of the list. If
@@ -120,7 +113,7 @@ void* bilinked_list_peek(bilinked_list* list);
  * 
  * Time complexity: O(1)
  */
-void* bilinked_list_pop(bilinked_list* list);
+void* list_pop(List* list);
 
 /**
  * Removes the element at the given index. Returns true on
@@ -128,49 +121,49 @@ void* bilinked_list_pop(bilinked_list* list);
  * 
  * Time complexity: O(n)
  */
-bool bilinked_list_remove(bilinked_list* list, size_t index);
+bool list_remove(List* list, size_t index);
 
 /**
  * Removes all elements of the list that statisfy the test.
  * 
  * Time complexity: O(n)
  */
-void bilinked_list_remove_if(bilinked_list* list, test test);
+void list_remove_if(List* list, Test test);
 
 /**
  * Creates a new iterator from the given list. You should
- * free the memory by calling the 'bilinked_list_iter_destroy'
+ * free the memory by calling the 'list_iter_destroy'
  * function.
  */
-bilinked_list_iterator* bilinked_list_iter(bilinked_list* list);
+BilinkedNode** list_iter(List* list);
 
 /**
  * Checks if there are any values left.
  */
-bool bilinked_list_iter_has_next(bilinked_list_iterator* iter);
+bool list_iter_has_next(BilinkedNode** iter);
 
 /**
  * Returns the current value and continue the iterator to
  * the next node. It should be always checked first if
  * there are any values left by checking the
- * 'bilinked_list_iter_has_next' function. If this is not
+ * 'list_iter_has_next' function. If this is not
  * done, then this may result in null pointer exceptions.
  */
-void* bilinked_list_iter_next(bilinked_list_iterator* iter);
+void* list_iter_next(BilinkedNode** iter);
 
 /**
  * Returns only the current value of the iterator. This
  * will not continue the iterator to the next node. If you
  * want to go to the next node, you should call
- * 'bilinked_list_iter_next'.
+ * 'list_iter_next'.
  */
-void* bilinked_list_iter_peek(bilinked_list_iterator* iter);
+void* list_iter_peek(BilinkedNode** iter);
 
 /**
  * Frees all allocated memory of the supplied iterator.
  * You should not call any methods of the iterator after
  * destroying it.
  */
-void bilinked_list_iter_destroy(bilinked_list_iterator* iter);
+void list_iter_destroy(BilinkedNode** iter);
 
 #endif

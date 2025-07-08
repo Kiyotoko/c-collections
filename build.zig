@@ -20,6 +20,7 @@ pub fn build(b: *std.Build) void {
             "src/array_list.c",
             "src/assertations.c",
             "src/linked_list.c",
+            "src/list.c",
             "src/binary_tree.c",
             "src/tree_set.c",
             "tests.c",
