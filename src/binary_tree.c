@@ -1,10 +1,12 @@
 #include <string.h>
 #include <stdlib.h>
-#include <stdio.h>
 #include "binary_tree.h"
 
 BinaryNode* binary_node_create(void* element, int element_size) {
-    BinaryNode* created = calloc(1, sizeof(BinaryNode));
+    BinaryNode* created = malloc(sizeof(BinaryNode));
+    if (!created) {
+        return NULL;
+    }
 
     created->value = malloc(element_size);
     memcpy(created->value, element, element_size);
@@ -78,17 +80,19 @@ int binary_node_get_balance_factor(BinaryNode* node) {
     return height_left - height_right;
 }
 
-void binary_node_add(BinaryTree* tree, BinaryNode* node, void* e) {
+int binary_node_add(BinaryTree* tree, BinaryNode* node, void* e) {
     int c = tree->comperator(tree->root->value, e);
-    if (c == 0) return;
+    if (c == 0) return TREE_UNCHANGED;
 
     // Pointer to the node we want to check.
     BinaryNode** relevant_child = (c  > 0) ? &(node->right) : &(node->left);
     
+    int status;
     if ((*relevant_child) == NULL) {
         *relevant_child = binary_node_create(e, tree->element_size);
+        status = *relevant_child == NULL ? TREE_FAILED : TREE_CHANGED;
     } else {
-        binary_node_add(tree, *relevant_child, e);
+        status = binary_node_add(tree, *relevant_child, e);
     }
     binary_node_update_height(node);
     int balance_factor = binary_node_get_balance_factor(node);
@@ -99,6 +103,7 @@ void binary_node_add(BinaryTree* tree, BinaryNode* node, void* e) {
         if (binary_node_get_balance_factor(node->right) > 0) binary_node_rotate_right(node->right);
         binary_node_rotate_left(node);
     }
+    return status;
 }
 
 bool binary_node_contains(BinaryTree* tree, BinaryNode* node, void* e) {
@@ -134,11 +139,12 @@ void binary_tree_destroy(BinaryTree* tree) {
     free(tree);
 }
 
-void binary_tree_add(BinaryTree* tree, void* e) {
+int binary_tree_add(BinaryTree* tree, void* e) {
     if (tree->root == NULL) {
         tree->root = binary_node_create(e, tree->element_size);
+        return TREE_CHANGED;
     } else {
-        binary_node_add(tree, tree->root, e);
+        return binary_node_add(tree, tree->root, e);
     }
 }
 

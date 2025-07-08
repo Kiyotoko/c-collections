@@ -4,6 +4,7 @@
 #include "src/array_list.h"
 #include "src/linked_list.h"
 #include "src/binary_tree.h"
+#include "src/tree_set.h"
 
 #define println printf("\n")
 
@@ -69,10 +70,26 @@ void linked_list_test() {
     linked_list_destroy(created);
 }
 
+void tree_set_test() {
+    TreeSet* set = tree_set_create(sizeof(int), &compere);
+    assert_equals(0, tree_set_size(set));
+    int i = 0;
+    for (; i < 3; i++) {
+        assert_equals(TREE_CHANGED, tree_set_add(set, &i));
+    }
+    assert_equals(3, tree_set_size(set));
+    i = 1;
+    assert_true(tree_set_contains(set, &i));
+    assert_equals_with(TREE_UNCHANGED, tree_set_add(set, &(i)), "Expected tree unchanged");
+    i = 10;
+    assert_false(tree_set_contains(set, &i));
+}
+
 int main() {
     array_list_test();
     binary_tree_test();
     linked_list_test();
+    tree_set_test();
 
     return 0;
 }

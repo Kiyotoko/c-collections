@@ -21,6 +21,7 @@ pub fn build(b: *std.Build) void {
             "src/assertations.c",
             "src/linked_list.c",
             "src/binary_tree.c",
+            "src/tree_set.c",
             "tests.c",
         }, .flags = &.{} });
 
