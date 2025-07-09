@@ -157,3 +157,9 @@ bool binary_tree_contains(BinaryTree* tree, void* e) {
 void binary_tree_traverse(BinaryTree* tree, Consumer consumer) {
     if (tree->root) binary_node_traverse(tree->root, consumer);
 }
+
+size_t binary_tree_height(BinaryTree* tree) {
+    if (tree->root) return tree->root->height;
+    
+    return 0;
+}

@@ -9,7 +9,7 @@ typedef struct BinaryNode {
     void* value;
     struct BinaryNode* left;
     struct BinaryNode* right;
-    int height;
+    size_t height;
 } BinaryNode;
 
 typedef struct {
@@ -31,5 +31,7 @@ int binary_tree_add(BinaryTree* tree, void* e);
 bool binary_tree_contains(BinaryTree* tree, void* e);
 
 void binary_tree_traverse(BinaryTree* tree, Consumer consumer);
+
+size_t binary_tree_height(BinaryTree* tree);
 
 #endif
