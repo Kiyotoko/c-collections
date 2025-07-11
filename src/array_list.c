@@ -42,10 +42,8 @@ void array_list_add(ArrayList* list, void* e) {
 int array_list_get(ArrayList* list, size_t index, void* buffer) {
     if (0 <= index && index < list->len) {
         void* data = list->data + index * list->element_size;
-        if (data != NULL) {
-            memcpy(buffer, data, list->element_size);
-            return 0;
-        }
+        memcpy(buffer, data, list->element_size);
+        return 0;
     }
     return 1;
 }

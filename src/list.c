@@ -51,6 +51,7 @@ void list_push(List* list, void* value) {
     BilinkedNode* created = bilinked_node_create(value, list->element_size);
     if (list->head) {
         created->next = list->head;
+        list->head->prev = created;
     } else {
         list->tail = created;
     }
@@ -66,30 +67,39 @@ void list_add(List* list, void* value) {
         created->prev = list->tail;
     } else {
         list->head = created;
-        created->prev = list->head;
     }
     list->tail = created;
     // Increase the size of the list;
     list->len++;
 }
 
-void* list_first(List* list) {
-    return (list->head) ? list->head->value : NULL;
-}
-
-void* list_last(List* list) {
-    return (list->tail) ? list->tail->value : NULL;
-}
-
-void* list_get(List* list, size_t index) {
-    // Check for index out of bounds.
-    if (index >= list->len) return false;
-
-    BilinkedNode* p = list->head;
-    for (size_t i = 0; i < index; i++) {
-        p = p->next;
+int list_first(List* list, void* buffer) {
+    if (list->head) {
+        memcpy(buffer, list->head->value, list->element_size);
+        return 0;
     }
-    return p->value;
+    return 1;
+}
+
+int list_last(List* list, void* buffer) {
+    if (list->tail) {
+        memcpy(buffer, list->tail->value, list->element_size);
+        return 0;
+    }
+    return 1;
+}
+
+int list_get(List* list, size_t index, void* buffer) {
+    // Check for index out of bounds.
+    if (0 <= index && index < list->len) {
+        BilinkedNode* p = list->head;
+        for (size_t i = 0; i < index; i++) {
+            p = p->next;
+        }
+        memcpy(buffer, p->value, list->element_size);
+        return 0;
+    }
+    return 1;
 }
 
 void list_foreach(List* list, Consumer consumer) {
@@ -113,23 +123,21 @@ List* list_filter(List* list, Test test) {
     return created;
 }
 
-void* list_peek(List* list) {
-    if (list->head != NULL) {
-        return list->head->value;
-    }
-    return NULL;
+int list_peek(List* list, void* buffer) {
+    return list_first(list, buffer);
 }
 
-void* list_pop(List* list) {
+int list_pop(List* list, void* buffer) {
     if (list->head != NULL) {
         BilinkedNode* head = list->head;
-        void* previous = head->value;
+        if (buffer) memcpy(buffer, head->value, list->element_size);
+        head->next->prev = NULL;
         list->head = head->next;
         list->len--;
         bilinked_node_destroy(head);
-        return previous;
+        return 0;
     }
-    return NULL;
+    return 1;
 }
 
 bool list_remove(List* list, size_t index) {
@@ -138,7 +146,7 @@ bool list_remove(List* list, size_t index) {
         return false;
     else if (index == 0) {
         // Remove the head of the list.
-        list_pop(list);
+        list_pop(list, NULL);
     } else if (list->head != NULL) {
         // Loop througt the list starting at the head to find the node at
         // the given index.
@@ -156,6 +164,7 @@ bool list_remove(List* list, size_t index) {
             p->next = NULL;
         } else {
             p->next = deleted->next;
+            p->next->prev = p;
         }
         list->len--;
         bilinked_node_destroy(deleted);

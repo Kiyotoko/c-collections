@@ -63,7 +63,7 @@ void list_add(List* list, void* value);
  * 
  * Time complexity: O(1)
  */
-void* list_first(List* list);
+int list_first(List* list, void* buffer);
 
 /**
  * Returns the last value of the list or null if this
@@ -71,7 +71,7 @@ void* list_first(List* list);
  * 
  * Time complexity: O(1)
  */
-void* list_last(List* list);
+int list_last(List* list, void* buffer);
 
 /**
  * Executes the given consumer for all elements in the list.
@@ -96,7 +96,7 @@ List* list_filter(List* list, Test test);
  * 
  * Time complexity: O(n)
  */
-void* list_get(List* list, size_t index);
+int list_get(List* list, size_t index, void* buffer);
 
 /**
  * Returns the first value of the list or null if this list
@@ -105,7 +105,7 @@ void* list_get(List* list, size_t index);
  * 
  * Time complexity: O(1)
  */
-void* list_peek(List* list);
+int list_peek(List* list, void* buffer);
 
 /**
  * Returns and removes the first element of the list. If
@@ -113,7 +113,7 @@ void* list_peek(List* list);
  * 
  * Time complexity: O(1)
  */
-void* list_pop(List* list);
+int list_pop(List* list, void* buffer);
 
 /**
  * Removes the element at the given index. Returns true on
