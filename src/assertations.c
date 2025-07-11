@@ -1,13 +1,20 @@
+#include <stdio.h>
 #include "assertations.h"
 
 #define CSI "\e["
 #define ANSI_RESET CSI "0m"
 #define ANSI_BOLD CSI "1m"
+#define ANSI_DIM CSI "2m"
 #define ANSI_RED CSI "91m"
+#define ANSI_GREEN CSI "92m"
 
 void fail_with(const char* str) {
-    fprintf(stderr, "%s%s%s%s\n", ANSI_RED, ANSI_BOLD, str, ANSI_RESET);
+    fprintf(stderr, "%s[error]%s %s%s\n", ANSI_RED ANSI_BOLD, ANSI_RESET ANSI_DIM, str, ANSI_RESET);
     fail;
+}
+
+void succeed_with(const char* str) {
+    fprintf(stderr, "%s[success]%s %s%s\n", ANSI_GREEN ANSI_BOLD, ANSI_RESET ANSI_DIM, str, ANSI_RESET);
 }
 
 void assert_equalsi_with(int a, int b, const char* str) {
@@ -77,7 +84,7 @@ void assert_true_with(bool v, const char* str) {
     }
 }
 void assert_false_with(bool v, const char* str) {
-    if (!v) {
+    if (v) {
         fail_with(str);
     }
 }

@@ -3,11 +3,11 @@
 
 #include <stdbool.h>
 #include <stdlib.h>
-#include <stdio.h>
 
 #define fail exit(1)
 
 void fail_with(const char* str);
+void succeed_with(const char* str);
 
 void assert_equalsi_with(int a, int b, const char* str);
 void assert_equalsl_with(long a, long b, const char* str);
