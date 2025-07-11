@@ -53,13 +53,10 @@ void array_list_grow(ArrayList* list) {
     int new_capacity = list->capacity * 2;
     if (new_capacity < MIN_CAPACITY) new_capacity = MIN_CAPACITY;
     
-    // Allocate a new array with the new capacity, then copy the memory from the
-    // old array to the new array and finally free the memory of the old array.
-    void* array = calloc(new_capacity, list->element_size);
-    // Failed to allocate memore, return.
+    // Allocate a new array with the new capacity
+    void* array = realloc(list->data, new_capacity * list->element_size);
+    // Failed to allocate memory, return.
     if (!array) return;
-    memcpy(array, list->data, list->element_size * list->len);
-    free(list->data);
 
     list->data = array;
     list->capacity = new_capacity;
@@ -67,11 +64,9 @@ void array_list_grow(ArrayList* list) {
 
 void array_list_shrink(ArrayList* list, size_t new_capacity) {
     if (new_capacity < list->len) return;
-    void* array = calloc(new_capacity, list->element_size);
-    // Failed to allocate memore, return.
+    void* array = realloc(list->data, new_capacity * list->element_size);
+    // Failed to allocate memory, return.
     if (!array) return;
-    memcpy(array, list->data, list->element_size * list->len);
-    free(list->data);
 
     list->data = array;
     list->capacity = new_capacity;
@@ -82,7 +77,7 @@ void array_list_clear(ArrayList* list) {
     list->capacity = MIN_CAPACITY;
     list->len = 0;
     void* array = calloc(list->capacity, list->element_size);
-    // Failed to allocate memore, return.
+    // Failed to allocate memory, return.
     if (!array) return;
     list->data = array;
 }
