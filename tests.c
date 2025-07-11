@@ -78,6 +78,7 @@ void tree_set_test() {
     assert_equals_with(TREE_UNCHANGED, tree_set_add(set, &(i)), "Expected tree unchanged");
     i = 10;
     assert_false_with(tree_set_contains(set, &i), "Expected tree does not contain element 10");
+    tree_set_destroy(set);
 
     succeed_with("TreeSet run successfully");
 }

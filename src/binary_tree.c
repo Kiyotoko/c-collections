@@ -8,9 +8,14 @@ BinaryNode* binary_node_create(void* element, int element_size) {
         return NULL;
     }
 
-    created->value = malloc(element_size);
-    memcpy(created->value, element, element_size);
+    void* value = malloc(element_size);
+    if (!value) {
+        free(created);
+        return NULL;
+    }
+    memcpy(value, element, element_size);
 
+    created->value = value;
     created->height = 1;
     created->left = NULL;
     created->right = NULL;
